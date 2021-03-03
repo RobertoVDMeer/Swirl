@@ -5,7 +5,7 @@ pollutantmean <- function(directory, pollutant, id = 1:332) {
         monitor <- read.csv(filename)
         readings <- append(monitor[[pollutant]], readings)
     }
-    mean(readings, trim = 0, na.rm = TRUE)
+    mean(readings, na.rm = TRUE)
 }
 
 generateMonitorFilename <- function(directory, monitorId) {
