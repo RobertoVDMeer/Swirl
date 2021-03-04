@@ -23,6 +23,23 @@ complete <- function(directory, id = 1:332) {
     complete
 }
 
+corr <- function(directory, threshold = 0) {
+    correlations <- c()
+    
+    allMonitors <- complete(directory)
+    validMonitorIds <- allMonitors[allMonitors["nobs"] > threshold,"id"] 
+    
+    for(monitorId in validMonitorIds) {
+        filename <- generateMonitorFilename(directory, monitorId)
+        monitor <- read.csv(filename)
+        
+        completeCases <- monitor[complete.cases(monitor),c("sulfate", "nitrate")]
+        correlation <- cor(completeCases$sulfate, completeCases$nitrate)
+        correlations <- append(correlation, correlations, after = 0)
+    }
+    correlations
+}
+
 generateMonitorFilename <- function(directory, monitorId) {
     fileName <- formatC(monitorId, width=3,  flag = "0")
     paste(directory, "/", fileName, ".csv", sep = "")
