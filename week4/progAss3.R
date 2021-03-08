@@ -1,3 +1,4 @@
+library(plyr)
 fatalities <- c("heart attack" = 11, "heart failure" = 17, "pneumonia" = 23)
 
 mortalityRates <- function() {
@@ -20,12 +21,13 @@ mortalityRates <- function() {
 # pneumonia 23
 
 best <- function(state, fatality) {
-    library(plyr)
-    
+   outcome <- getOutCome(state, fatality)     
+   outcome <- arrange(outcome, Outcome, Hospital)
+   outcome[1,"Hospital"]
 }
 
 
-getOutCome <- function(state = "all", fatality = fatalities["heart attack"]) {
+getOutCome <- function(state = "all", fatality = "heart attack") {
     outcome <- read.csv("outcome-of-care-measures.csv"
              , na.strings = "Not Available", stringsAsFactors = FALSE)
     
@@ -40,13 +42,13 @@ getOutCome <- function(state = "all", fatality = fatalities["heart attack"]) {
     }
     
     # Check 1 of the 3 fatality rates was chosen
-    if(!fatality %in% fatalities) {
+    if(!fatality %in% names(fatalities)) {
         stop("Invalid outcome option chosen")    
     } 
     
-    outcome <- outcome[!is.na(outcome[,fatality]),]
-    outcome <- outcome[, c(2, 7, fatality)] 
-    names(outcome) <- c("Hospital", "State", fatality) 
+    outcome <- outcome[!is.na(outcome[,fatalities[fatality]]),]
+    outcome <- outcome[, c(2, 7, fatalities[fatality])] 
+    names(outcome) <- c("Hospital", "State", "Outcome") 
     
     
     outcome
