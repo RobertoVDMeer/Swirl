@@ -26,6 +26,16 @@ best <- function(state, fatality) {
    outcome[1,"Hospital"]
 }
 
+rankhospital <- function(state, fatality, num = "best") {
+   outcome <- getOutCome(state, fatality)     
+   outcome <- arrange(outcome, Outcome, Hospital)
+   
+   if(num == "best") return(outcome[1,"Hospital"])
+   if(num == "worst") return(outcome[nrow(outcome),"Hospital"])
+   if(num > nrow(outcome))return(NA)
+   outcome[num,"Hospital"]
+}
+
 
 getOutCome <- function(state = "all", fatality = "heart attack") {
     outcome <- read.csv("outcome-of-care-measures.csv"
